@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment version="1080" identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="VerticalGlyphPropertiesPalette">
+            <connections>
+                <outlet property="bottomKerningGroupTextField" destination="sul-Qf-6Xm" id="Oo8-Ct-qyg"/>
+                <outlet property="bottomMetricsKeyTextField" destination="b3V-Wp-9ur" id="qKP-nk-Cn3"/>
+                <outlet property="dialog" destination="1" id="dha-ji-65A"/>
+                <outlet property="selectedGlyphsArrayController" destination="zeq-5F-ybP" id="TsS-JQ-yl2"/>
+                <outlet property="selectedLayersArrayController" destination="qW4-co-xgU" id="VSF-Xr-HO1"/>
+                <outlet property="topKerningGroupTextField" destination="QJg-2W-dfp" id="tjW-sw-7UZ"/>
+                <outlet property="topMetricsKeyTextField" destination="A5S-dG-I6v" id="XwV-4A-xSX"/>
+                <outlet property="vertOriginTextField" destination="Srw-Ov-lBN" id="J0n-xC-SFh"/>
+                <outlet property="vertWidthMetricsKeyTextField" destination="u2D-zp-hpW" id="9bX-ex-Tzp"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="1" customClass="GSPaletteView">
+            <rect key="frame" x="0.0" y="0.0" width="146" height="126"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="A5S-dG-I6v" customClass="GSSteppingTextField">
+                    <rect key="frame" x="28" y="107" width="90" height="15"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="15" id="vAG-Ne-7zg"/>
+                    </constraints>
+                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" placeholderString="0" id="3eB-Cy-kb4">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="editable" keyPath="editable" id="RIT-rW-3V1"/>
+                        <binding destination="-2" name="enabled" keyPath="enabled" previousBinding="RIT-rW-3V1" id="lmH-lv-bhx"/>
+                        <binding destination="qW4-co-xgU" name="textColor" keyPath="selection.bottomMetricsKeyColor" id="Gel-5O-oC1"/>
+                        <binding destination="qW4-co-xgU" name="value" keyPath="selection.topMetricsKeyUI" id="nuv-uO-rd9">
+                            <dictionary key="options">
+                                <string key="NSNoSelectionPlaceholder">(empty)</string>
+                                <string key="NSNullPlaceholder">0</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </textField>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="b3V-Wp-9ur" customClass="GSSteppingTextField">
+                    <rect key="frame" x="28" y="63" width="90" height="15"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="15" id="0WJ-PG-iCw"/>
+                    </constraints>
+                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="center" placeholderString="0" id="DZd-OP-G29">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="editable" keyPath="editable" id="zNm-YR-GV8"/>
+                        <binding destination="-2" name="enabled" keyPath="enabled" previousBinding="zNm-YR-GV8" id="N8F-es-FRi"/>
+                        <binding destination="qW4-co-xgU" name="textColor" keyPath="selection.bottomMetricsKeyColor" id="6cE-Ez-L6o"/>
+                        <binding destination="qW4-co-xgU" name="value" keyPath="selection.bottomMetricsKeyUI" id="YYl-Jl-GIj">
+                            <dictionary key="options">
+                                <string key="NSNoSelectionPlaceholder">(empty)</string>
+                                <string key="NSNullPlaceholder">0</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </textField>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="u2D-zp-hpW" customClass="GSSteppingTextField">
+                    <rect key="frame" x="88" y="84" width="37" height="15"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="15" id="g2k-Oq-HMZ"/>
+                    </constraints>
+                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="left" placeholderString="default" id="20z-3p-HbV">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="editable" keyPath="editable" id="s39-xp-yc6"/>
+                        <binding destination="-2" name="enabled" keyPath="enabled" previousBinding="s39-xp-yc6" id="Tx7-ud-Pk6"/>
+                        <binding destination="qW4-co-xgU" name="textColor" keyPath="selection.vertWidthMetricsKeyColor" id="sfC-2e-nfS"/>
+                        <binding destination="qW4-co-xgU" name="value" keyPath="selection.vertWidthMetricsKeyUI" id="H2w-EQ-C26">
+                            <dictionary key="options">
+                                <string key="NSNoSelectionPlaceholder">(empty)</string>
+                                <string key="NSNullPlaceholder">default</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="czA-WY-RIf">
+                    <rect key="frame" x="129" y="87" width="11" height="11"/>
+                    <textFieldCell key="cell" controlSize="mini" lineBreakMode="clipping" title="H" id="NyZ-af-Wnx">
+                        <font key="font" metaFont="miniSystem"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Srw-Ov-lBN" customClass="GSSteppingTextField">
+                    <rect key="frame" x="22" y="84" width="38" height="15"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="15" id="vw6-WU-JaJ"/>
+                    </constraints>
+                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="right" placeholderString="default" id="e66-0M-ix1">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="editable" keyPath="editable" id="ScL-3b-KKR"/>
+                        <binding destination="-2" name="enabled" keyPath="enabled" previousBinding="ScL-3b-KKR" id="bsw-px-3hC"/>
+                        <binding destination="qW4-co-xgU" name="textColor" keyPath="selection.vertOriginColor" id="azM-Cd-W4R"/>
+                        <binding destination="qW4-co-xgU" name="value" keyPath="selection.vertOriginUI" id="LOQ-En-2yI">
+                            <dictionary key="options">
+                                <string key="NSNoSelectionPlaceholder">(empty)</string>
+                                <string key="NSNullPlaceholder">default</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sZ0-ha-XRM">
+                    <rect key="frame" x="6" y="48" width="66" height="11"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="kerning group" id="WlB-0i-fbq">
+                        <font key="font" metaFont="miniSystem"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="uY5-Yy-Jhh">
+                    <rect key="frame" x="53" y="28" width="19" height="11"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="top" id="ZDf-sK-kkV">
+                        <font key="font" metaFont="miniSystem"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aqJ-Ls-oy7">
+                    <rect key="frame" x="36" y="8" width="36" height="11"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="bottom" id="AgO-wQ-v8V">
+                        <font key="font" metaFont="miniSystem"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QJg-2W-dfp">
+                    <rect key="frame" x="76" y="24" width="64" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="AtA-aT-eAA"/>
+                    </constraints>
+                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" placeholderString="(empty)" id="ObT-lE-eda">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="enabled" keyPath="enabled" id="e83-R0-jpA"/>
+                        <binding destination="zeq-5F-ybP" name="value" keyPath="selection.topKerningGroup" id="5RD-kG-OLH">
+                            <dictionary key="options">
+                                <string key="NSNoSelectionPlaceholder">(empty)</string>
+                                <string key="NSNullPlaceholder">(empty)</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </textField>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sul-Qf-6Xm">
+                    <rect key="frame" x="76" y="4" width="64" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="gON-r8-T4F"/>
+                    </constraints>
+                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" placeholderString="(empty)" id="SFX-qO-1b4">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="enabled" keyPath="enabled" id="Cnp-mG-FvJ"/>
+                        <binding destination="zeq-5F-ybP" name="value" keyPath="selection.bottomKerningGroup" id="DvR-AS-Ebu">
+                            <dictionary key="options">
+                                <string key="NSNoSelectionPlaceholder">(empty)</string>
+                                <string key="NSNullPlaceholder">(empty)</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="G8c-Vq-8yu">
+                    <rect key="frame" x="6" y="87" width="12" height="11"/>
+                    <textFieldCell key="cell" controlSize="mini" lineBreakMode="clipping" title="O" id="iEg-Mi-nuM">
+                        <font key="font" metaFont="miniSystem"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vDh-e8-GG0">
+                    <rect key="frame" x="61" y="84" width="24" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="Ycf-OB-65x"/>
+                        <constraint firstAttribute="width" constant="20" id="x74-pB-PeR"/>
+                    </constraints>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="あ" id="XoH-tf-bQ8">
+                        <font key="font" size="20" name="HiraMaruProN-W4"/>
+                        <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PGB-ie-mzG">
+                    <rect key="frame" x="124" y="66" width="14" height="14"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="14" id="ZIO-Rb-C6l"/>
+                        <constraint firstAttribute="width" constant="14" id="cUz-he-S4s"/>
+                    </constraints>
+                    <buttonCell key="cell" type="recessed" bezelStyle="recessed" image="NSLockLockedTemplate" imagePosition="overlaps" alignment="center" alternateImage="NSLockUnlockedTemplate" controlSize="small" imageScaling="proportionallyDown" inset="2" id="COk-S3-TLG">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="systemBold" size="12"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="-2" name="value" keyPath="editable" id="Gqp-NE-uY9"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="QJg-2W-dfp" secondAttribute="trailing" constant="8" id="8vu-gr-2om"/>
+                <constraint firstItem="sul-Qf-6Xm" firstAttribute="leading" secondItem="aqJ-Ls-oy7" secondAttribute="trailing" constant="8" id="9we-8l-b9v"/>
+                <constraint firstItem="vDh-e8-GG0" firstAttribute="centerX" secondItem="1" secondAttribute="centerX" id="A2O-54-bB6"/>
+                <constraint firstItem="sul-Qf-6Xm" firstAttribute="top" secondItem="QJg-2W-dfp" secondAttribute="bottom" constant="4" id="B0I-qH-YtF"/>
+                <constraint firstItem="QJg-2W-dfp" firstAttribute="top" secondItem="sZ0-ha-XRM" secondAttribute="bottom" constant="8" id="E4z-S4-tBx"/>
+                <constraint firstItem="G8c-Vq-8yu" firstAttribute="width" secondItem="czA-WY-RIf" secondAttribute="width" multiplier="1.14286" id="FBb-9h-QOG"/>
+                <constraint firstItem="sZ0-ha-XRM" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="8" id="FlS-Es-kgT"/>
+                <constraint firstItem="czA-WY-RIf" firstAttribute="leading" secondItem="u2D-zp-hpW" secondAttribute="trailing" constant="8" id="G30-wB-mmT"/>
+                <constraint firstAttribute="trailing" secondItem="PGB-ie-mzG" secondAttribute="trailing" constant="8" id="GI2-si-dBM"/>
+                <constraint firstAttribute="trailing" secondItem="czA-WY-RIf" secondAttribute="trailing" constant="8" id="Ibc-IB-79E"/>
+                <constraint firstItem="G8c-Vq-8yu" firstAttribute="firstBaseline" secondItem="Srw-Ov-lBN" secondAttribute="firstBaseline" id="Otg-yI-L6i"/>
+                <constraint firstItem="QJg-2W-dfp" firstAttribute="leading" secondItem="uY5-Yy-Jhh" secondAttribute="trailing" constant="8" id="SOa-g4-boV"/>
+                <constraint firstItem="Srw-Ov-lBN" firstAttribute="leading" secondItem="G8c-Vq-8yu" secondAttribute="trailing" constant="8" id="Uqt-Ma-csi"/>
+                <constraint firstItem="PGB-ie-mzG" firstAttribute="top" secondItem="u2D-zp-hpW" secondAttribute="bottom" constant="4" id="Vkw-4w-1AP"/>
+                <constraint firstItem="G8c-Vq-8yu" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="8" id="Xho-uj-hgE"/>
+                <constraint firstItem="u2D-zp-hpW" firstAttribute="top" secondItem="A5S-dG-I6v" secondAttribute="bottom" constant="8" id="Yrq-U1-nOb"/>
+                <constraint firstItem="Srw-Ov-lBN" firstAttribute="top" secondItem="A5S-dG-I6v" secondAttribute="bottom" constant="8" id="c6a-Pd-FzA"/>
+                <constraint firstItem="b3V-Wp-9ur" firstAttribute="top" secondItem="u2D-zp-hpW" secondAttribute="bottom" constant="6" id="cZJ-xZ-on5"/>
+                <constraint firstItem="A5S-dG-I6v" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="30" id="cbJ-jg-XDC"/>
+                <constraint firstItem="aqJ-Ls-oy7" firstAttribute="trailing" secondItem="uY5-Yy-Jhh" secondAttribute="trailing" id="dOH-HX-ao0"/>
+                <constraint firstItem="u2D-zp-hpW" firstAttribute="leading" secondItem="Srw-Ov-lBN" secondAttribute="trailing" constant="32" id="e5s-oe-mS8"/>
+                <constraint firstItem="A5S-dG-I6v" firstAttribute="top" secondItem="1" secondAttribute="top" constant="4" id="gcp-gA-6zv"/>
+                <constraint firstItem="aqJ-Ls-oy7" firstAttribute="firstBaseline" secondItem="sul-Qf-6Xm" secondAttribute="firstBaseline" id="hVE-oS-UzU"/>
+                <constraint firstItem="u2D-zp-hpW" firstAttribute="leading" secondItem="Srw-Ov-lBN" secondAttribute="trailing" constant="32" id="k7r-B2-tpC"/>
+                <constraint firstItem="b3V-Wp-9ur" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="30" id="lug-MT-DpT"/>
+                <constraint firstItem="czA-WY-RIf" firstAttribute="firstBaseline" secondItem="u2D-zp-hpW" secondAttribute="firstBaseline" id="mDn-2s-X8c"/>
+                <constraint firstItem="vDh-e8-GG0" firstAttribute="firstBaseline" secondItem="u2D-zp-hpW" secondAttribute="firstBaseline" constant="2" id="oim-qs-xP7"/>
+                <constraint firstAttribute="bottom" secondItem="sul-Qf-6Xm" secondAttribute="bottom" constant="4" id="p4v-P1-0cp"/>
+                <constraint firstAttribute="trailing" secondItem="A5S-dG-I6v" secondAttribute="trailing" constant="30" id="s5b-iH-6f3"/>
+                <constraint firstItem="sZ0-ha-XRM" firstAttribute="top" secondItem="b3V-Wp-9ur" secondAttribute="bottom" constant="4" id="viN-Qk-3aK"/>
+                <constraint firstItem="Srw-Ov-lBN" firstAttribute="width" secondItem="u2D-zp-hpW" secondAttribute="width" id="vmr-Ao-d2h"/>
+                <constraint firstAttribute="trailing" secondItem="sul-Qf-6Xm" secondAttribute="trailing" constant="8" id="wp3-Lg-R4H"/>
+                <constraint firstItem="uY5-Yy-Jhh" firstAttribute="trailing" secondItem="sZ0-ha-XRM" secondAttribute="trailing" id="x4H-dY-Pnk"/>
+                <constraint firstItem="uY5-Yy-Jhh" firstAttribute="firstBaseline" secondItem="QJg-2W-dfp" secondAttribute="firstBaseline" id="xXQ-Ys-76g"/>
+                <constraint firstItem="PGB-ie-mzG" firstAttribute="leading" secondItem="b3V-Wp-9ur" secondAttribute="trailing" constant="8" id="zi1-60-5NT"/>
+            </constraints>
+            <connections>
+                <outlet property="_controller" destination="-2" id="jOT-R9-oyt"/>
+            </connections>
+            <point key="canvasLocation" x="-287" y="149"/>
+        </customView>
+        <arrayController objectClassName="VGPPLayer" id="qW4-co-xgU" userLabel="Layer Array Controller">
+            <connections>
+                <binding destination="-2" name="contentArray" keyPath="selectedLayers" id="53A-Cg-koM"/>
+            </connections>
+        </arrayController>
+        <arrayController objectClassName="GSGlyph" id="zeq-5F-ybP" userLabel="Glyph Array Controller">
+            <connections>
+                <binding destination="-2" name="contentArray" keyPath="selectedGlyphs" id="uEw-M7-0Ov"/>
+            </connections>
+        </arrayController>
+    </objects>
+    <resources>
+        <image name="NSLockLockedTemplate" width="10" height="14"/>
+        <image name="NSLockUnlockedTemplate" width="10" height="14"/>
+    </resources>
+</document>
