@@ -9,6 +9,99 @@ from AppKit import NSColor, NSFont, NSFontFeatureSettingsAttribute, NSFontFeatur
 from GlyphsApp import *
 from GlyphsApp.plugins import *
 
+# - Custom Column Implementation
+
+from Foundation import NSSortDescriptor, NSString, NSValueTransformer
+from AppKit import NSTableColumn, NSValueBinding, NSMenuItem, NSValueTransformerBindingOption
+
+class VGPPDoubleToStringTransformer(NSValueTransformer):
+
+    @classmethod
+    def transformedValueClass(cls):
+        return NSString
+
+    @classmethod
+    def allowsReverseTransformation(cls):
+        return False
+
+    def transformedValue_(self, value):
+        double_value = value.doubleValue()
+        if double_value > -1000000 and double_value < 1000000:
+            return '{0:.0f}'.format(double_value)
+        return ''
+
+def is_table_column_visible(identifier):
+    value = Glyphs.defaults["FontViewListColumnVisibe_{0}".format(identifier)]
+    if value:
+        return True
+    return False
+
+def insert_new_column(font, title, key_path, identifier=None, base_identifier='Name', compare_selector=None, value_transformer_class=None, insert_before_identifier=None, insert_after_identifier=None):
+
+    identifier = identifier or title
+    controller = font.fontView
+    table_view = controller.listViewTableview()
+
+    if not table_view.tableColumnWithIdentifier_(identifier):
+        array_controller = controller.glyphsArrayController()
+        new_column = NSTableColumn.alloc().initWithIdentifier_(identifier)
+        new_column.setTitle_(title)
+        new_column.setHidden_(not is_table_column_visible(identifier))
+        if base_identifier:
+            base_column = table_view.tableColumnWithIdentifier_(base_identifier)
+            new_column.dataCell().setFont_(base_column.dataCell().font())
+            new_column.setWidth_(base_column.width())
+            new_column.setMinWidth_(base_column.minWidth())
+            new_column.setMaxWidth_(base_column.maxWidth())
+            compare_selector = compare_selector or (base_column.sortDescriptorPrototype() and base_column.sortDescriptorPrototype().selector())
+        compare_selector = compare_selector or 'compare:'
+        new_column.setSortDescriptorPrototype_(NSSortDescriptor.sortDescriptorWithKey_ascending_selector_(key_path, True, compare_selector))
+        binding_option = None
+        if value_transformer_class:
+            binding_option = {NSValueTransformerBindingOption: value_transformer_class.alloc().init()}
+        new_column.bind_toObject_withKeyPath_options_(NSValueBinding, array_controller, "arrangedObjects.{0}".format(key_path), binding_option)
+        table_view.addTableColumn_(new_column)
+        new_column_index = None
+        if insert_before_identifier:
+            new_column_index = table_view.columnWithIdentifier_(insert_before_identifier)
+            new_column_index = new_column_index if new_column_index >= 0 else None
+        if insert_after_identifier:
+            new_column_index = table_view.columnWithIdentifier_(insert_after_identifier)
+            new_column_index = new_column_index + 1 if new_column_index >= 0 else None
+        if new_column_index is not None:
+            table_view.moveColumn_toColumn_(table_view.numberOfColumns() - 1, new_column_index)
+
+    menu = table_view.headerView().menu()
+    if not menu.itemWithTitle_(title):
+        base_menu_item = menu.itemArray()[-1]
+        if base_identifier:
+            base_menu_item = menu.itemWithTitle_(table_view.tableColumnWithIdentifier_(base_identifier).title())
+        if base_menu_item:
+            new_column = table_view.tableColumnWithIdentifier_(identifier)
+            menu_item = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(title, None, '')
+            menu_item.setTarget_(base_menu_item.target())
+            menu_item.setAction_(base_menu_item.action())
+            menu_item.setRepresentedObject_(new_column)
+            new_index = menu.numberOfItems()
+            if insert_before_identifier:
+                base_column = table_view.tableColumnWithIdentifier_(insert_before_identifier)
+                for i, item in enumerate(menu.itemArray()):
+                    if item.representedObject() == base_column:
+                        new_index = i
+            if insert_after_identifier:
+                base_column = table_view.tableColumnWithIdentifier_(insert_after_identifier)
+                for i, item in enumerate(menu.itemArray()):
+                    if item.representedObject() == base_column:
+                        new_index = i + 1
+            menu.insertItem_atIndex_(menu_item, new_index)
+
+def customize_table_view_in_font(font):
+    insert_new_column(font, 'Bottom Group',    'bottomKerningGroup', base_identifier='Right Group',    insert_after_identifier='Right Group')
+    insert_new_column(font, 'Top Group',       'topKerningGroup',    base_identifier='Left Group',     insert_after_identifier='Right Group')
+    insert_new_column(font, 'Vertical Origin', 'layer0.vertOrigin',  base_identifier='VerticalWidth',  insert_before_identifier='VerticalWidth', value_transformer_class=VGPPDoubleToStringTransformer)
+
+# - Palette Implementation
+
 def get_selected_layers_from_font(font):
     # Obtain currently selected layers in most situations, and wrap them with the proxy object.
     if font.currentTab:
@@ -235,6 +328,8 @@ class VerticalGlyphPropertiesPalette(PalettePlugin):
     selectedGlyphs = objc.object_property()
     selectedLayers = objc.object_property()
 
+    hasAddedCustomColumns = objc.object_property(typestr=objc._C_BOOL)
+
     @objc.python_method
     @staticmethod
     def make_slashed_zero_nsfont(nsfont):
@@ -254,6 +349,7 @@ class VerticalGlyphPropertiesPalette(PalettePlugin):
         self.editable = False
         self.selectedGlyphs = []
         self.selectedLayers = []
+        self.hasAddedCustomColumns = False
         self.loadNib('IBdialog', __file__)
         # Enable keyboard navigation with the Tab key.
         self.topMetricsKeyTextField.setNextKeyView_(self.bottomMetricsKeyTextField)
@@ -285,6 +381,9 @@ class VerticalGlyphPropertiesPalette(PalettePlugin):
             if self.windowController():
                 font = sender.object()
                 selected_layers = get_selected_layers_from_font(font)
+                if not self.hasAddedCustomColumns:
+                    customize_table_view_in_font(font)
+                    self.hasAddedCustomColumns = True
             if selected_layers and len(selected_layers) > 0:
                 # Update the binding only when the selection is changed to prevent the possible perfomance degradation.
                 if self.selectedLayers != selected_layers:

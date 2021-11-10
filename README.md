@@ -18,6 +18,8 @@ A Glyphs palette plugin which allows you to view/edit vertical kerning groups an
 4. Make sure the kerning groups are set as intended by opening the glyphs in a new tab.
 5. While not recommended, vertical glyphs metrics become editable if you click on the lock icon.
 
+As a bonus, this plugin adds the missing table columns for the following properties: *Top Kerning Group, Bottom Kerning Group* and *Vertical Origin.* Switch to the list mode, right click on the table column and have them enabled when you need to have a glance at those values.
+
 ## Requirements
 
 Tested with Glyphs 2.6 on macOS 10.15.7.
