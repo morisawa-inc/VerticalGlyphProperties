@@ -22,7 +22,7 @@ As a bonus, this plugin adds the missing table columns for the following propert
 
 ## Requirements
 
-Tested with Glyphs 2.6 on macOS 10.15.7.
+Tested with Glyphs 2.6.2 and Glyphs 3.1.1 on macOS 10.15.
 
 ## License
 
