@@ -251,10 +251,16 @@ class VGPPLayer(NSObject):
     @vertOriginUI.setter
     def vertOriginUI(self, value):
         if value is not None:
-            self.layer.pyobjc_instanceMethods.setVertOriginUI_(value)
+            if self.layer.pyobjc_instanceMethods.respondsToSelector_('setVertOriginKeyUI:'):
+                self.layer.pyobjc_instanceMethods.setVertOriginKeyUI_(value)
+            elif self.layer.pyobjc_instanceMethods.respondsToSelector_('setVertOriginUI:'):
+                self.layer.pyobjc_instanceMethods.setVertOriginUI_(value)
         else:
             # Apart from the metrics key, make sure to reset to the default value as well.
-            self.layer.pyobjc_instanceMethods.setVertOriginUI_('')
+            if self.layer.pyobjc_instanceMethods.respondsToSelector_('setVertOriginKeyUI:'):
+                self.layer.pyobjc_instanceMethods.setVertOriginKeyUI_('')
+            elif self.layer.pyobjc_instanceMethods.respondsToSelector_('setVertOriginUI:'):
+                self.layer.pyobjc_instanceMethods.setVertOriginUI_('')
             self.layer.pyobjc_instanceMethods.setVertOrigin_(NSNotFound)
 
     @vertWidthMetricsKeyUI.setter
@@ -414,14 +420,16 @@ class VerticalGlyphPropertiesPalette(PalettePlugin):
         try:
             selected_layers = None
             if self.windowController():
+                font = None
                 if isinstance(sender.object(), (objc.lookUpClass('GSEditViewController'), objc.lookUpClass('GSFontViewController'))):
                     selected_layers = VGPPLayer.layersFromArray_(sender.object().selectedLayers or [])
+                    font = sender.object().windowController().document().font
                 else:
                     font = sender.object()
                     selected_layers = get_selected_layers_from_font(font)
-                    if not self.hasAddedCustomColumns:
-                        customize_table_view_in_font(font)
-                        self.hasAddedCustomColumns = True
+                if font and not self.hasAddedCustomColumns:
+                    customize_table_view_in_font(font)
+                    self.hasAddedCustomColumns = True
             if selected_layers and len(selected_layers) > 0:
                 # Update the binding only when the selection is changed to prevent the possible perfomance degradation.
                 if self.selectedLayers != selected_layers:
