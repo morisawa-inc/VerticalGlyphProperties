@@ -113,8 +113,13 @@ def get_selected_layers_from_font(font):
         return VGPPLayer.layersFromArray_((glyph.layers[master.id] for glyph in glyphs))
     return tuple()
 
-def get_glyphs_from_layers(layers, font):
-    return tuple(sorted(set((layer.parent for layer in layers)), key=lambda g: font.indexOfGlyph_(g)))
+def get_glyphs_from_layers(layers):
+    return tuple((t[0] for t in sorted(set(((layer.parent, layer.parent.parent.indexOfGlyph_(layer.parent)) for layer in layers)), key=lambda t: t[1])))
+
+def is_placeholder_for_metrics_key_tag_in_layer(layer, tag):
+    # FIXME: - [GSLayer vertWidthMetricsKeyState] doesn't seems to set the GSMetricsKeysPlaceholder bit.
+    key = layer.plainMetricsKeyUI_(tag)
+    return layer.metricsValue_atHeight_(tag, 0x7fffffffffffffff) < 0.0;
 
 class VGPPLayer(NSObject):
 
@@ -215,14 +220,24 @@ class VGPPLayer(NSObject):
 
     @vertOriginUI.getter
     def vertOriginUI(self):
-        _, is_placeholder = self.layer.vertOriginUIisPlaceholder_(None)
+        is_placeholder = False
+        if self.layer.pyobjc_instanceMethods.respondsToSelector_('vertOriginUIisPlaceholder:'):
+            _, is_placeholder = self.layer.pyobjc_instanceMethods.vertOriginUIisPlaceholder_(None)
         if is_placeholder: return None
+        if self.layer.pyobjc_instanceMethods.respondsToSelector_('vertOriginKeyUI'):
+            return self.layer.pyobjc_instanceMethods.vertOriginKeyUI() if -1000000 < self.layer.pyobjc_instanceMethods.vertOrigin() < 1000000 else None
         return "{0:.0f}".format(self.layer.pyobjc_instanceMethods.vertOrigin()) if -1000000 < self.layer.pyobjc_instanceMethods.vertOrigin() < 1000000 else None
 
     @vertWidthMetricsKeyUI.getter
     def vertWidthMetricsKeyUI(self):
         # Return nil to prefer the placeholder string set in XIB for simplicity.
-        _, is_placeholder = self.layer.vertWidthMetricsKeyUIisPlaceholder_(None)
+        is_placeholder = False
+        if self.layer.pyobjc_instanceMethods.respondsToSelector_('vertWidthMetricsKeyState'):
+            is_placeholder = self.layer.pyobjc_instanceMethods.vertWidthMetricsKeyState() & (1 << 2)
+            if not is_placeholder:
+                is_placeholder = is_placeholder_for_metrics_key_tag_in_layer(self.layer, 0x4)
+        elif self.layer.pyobjc_instanceMethods.respondsToSelector_('vertWidthMetricsKeyUIisPlaceholder:'):
+            _, is_placeholder = self.layer.pyobjc_instanceMethods.vertWidthMetricsKeyUIisPlaceholder_(None)
         return self.layer.pyobjc_instanceMethods.vertWidthMetricsKeyUI() if not is_placeholder else None
 
     @topMetricsKeyUI.setter
@@ -269,11 +284,15 @@ class VGPPLayer(NSObject):
 
     @vertWidthMetricsKeyUI.validate
     def vertWidthMetricsKeyUI(self, value, error):
+        if self.layer.pyobjc_instanceMethods.respondsToSelector_('vertWidthMetricsKeyUI'):
+            return self.layer.pyobjc_instanceMethods.vertWidthMetricsKeyUI()
         return self.layer.validateVertWidthMetricsKey_error_(value, None)
 
     @topMetricsKeyIsInSync.getter
     def topMetricsKeyIsInSync(self):
-        if self.layer.pyobjc_instanceMethods.topMetricsKey():
+        if self.layer.pyobjc_instanceMethods.respondsToSelector_('leftMetricsKeyState'):
+            return not (self.layer.pyobjc_instanceMethods.leftMetricsKeyState() & (1 << 0))
+        elif self.layer.pyobjc_instanceMethods.topMetricsKey():
             duplicated = self.layer.copy()
             duplicated.syncTopMetrics()
             return self.layer.pyobjc_instanceMethods.TSB() == duplicated.pyobjc_instanceMethods.TSB()
@@ -281,7 +300,9 @@ class VGPPLayer(NSObject):
 
     @bottomMetricsKeyIsInSync.getter
     def bottomMetricsKeyIsInSync(self):
-        if self.layer.pyobjc_instanceMethods.bottomMetricsKey():
+        if self.layer.pyobjc_instanceMethods.respondsToSelector_('bottomMetricsKeyState'):
+            return not (self.layer.pyobjc_instanceMethods.bottomMetricsKeyState() & (1 << 0))
+        elif self.layer.pyobjc_instanceMethods.bottomMetricsKey():
             duplicated = self.layer.copy()
             duplicated.syncBottomMetrics()
             return self.layer.pyobjc_instanceMethods.BSB() == duplicated.pyobjc_instanceMethods.BSB()
@@ -289,14 +310,26 @@ class VGPPLayer(NSObject):
 
     @vertWidthMetricsKeyIsInSync.getter
     def vertWidthMetricsKeyIsInSync(self):
-        return self.layer.pyobjc_instanceMethods.vertWidthMetricsKeyIsInSync()
+        if self.layer.pyobjc_instanceMethods.respondsToSelector_('vertWidthMetricsKeyState'):
+            return not (self.layer.pyobjc_instanceMethods.vertWidthMetricsKeyState() & (1 << 0))
+        elif self.layer.pyobjc_instanceMethods.respondsToSelector_('syncVertWidthMetrics'):
+            duplicated = self.layer.copy()
+            duplicated.syncVertWidthMetrics()
+            return self.layer.pyobjc_instanceMethods.vertWidth() == duplicated.pyobjc_instanceMethods.vertWidth()
+        if self.layer.pyobjc_instanceMethods.respondsToSelector_('vertWidthMetricsKeyIsInSync'):
+            return self.layer.pyobjc_instanceMethods.vertWidthMetricsKeyIsInSync()
+        return True
 
     @topMetricsKeyColor.getter
     def topMetricsKeyColor(self):
+        if self.layer.pyobjc_instanceMethods.respondsToSelector_('colorForMetricsState:') and self.layer.pyobjc_instanceMethods.respondsToSelector_('topMetricsKeyState'):
+            return self.layer.pyobjc_instanceMethods.colorForMetricsState_(self.layer.pyobjc_instanceMethods.topMetricsKeyState())
         return NSColor.controlTextColor() if self.topMetricsKeyIsInSync else NSColor.systemRedColor()
 
     @bottomMetricsKeyColor.getter
     def bottomMetricsKeyColor(self):
+        if self.layer.pyobjc_instanceMethods.respondsToSelector_('colorForMetricsState:') and self.layer.pyobjc_instanceMethods.respondsToSelector_('bottomMetricsKeyState'):
+            return self.layer.pyobjc_instanceMethods.colorForMetricsState_(self.layer.pyobjc_instanceMethods.bottomMetricsKeyState())
         return NSColor.controlTextColor() if self.bottomMetricsKeyIsInSync else NSColor.systemRedColor()
 
     @vertOriginColor.getter
@@ -305,6 +338,8 @@ class VGPPLayer(NSObject):
 
     @vertWidthMetricsKeyColor.getter
     def vertWidthMetricsKeyColor(self):
+        if self.layer.pyobjc_instanceMethods.respondsToSelector_('colorForMetricsState:') and self.layer.pyobjc_instanceMethods.respondsToSelector_('vertWidthMetricsKeyState'):
+            return self.layer.pyobjc_instanceMethods.colorForMetricsState_(self.layer.pyobjc_instanceMethods.vertWidthMetricsKeyState())
         return NSColor.controlTextColor() if self.vertWidthMetricsKeyIsInSync else NSColor.systemRedColor()
 
 class VerticalGlyphPropertiesPalette(PalettePlugin):
@@ -379,16 +414,19 @@ class VerticalGlyphPropertiesPalette(PalettePlugin):
         try:
             selected_layers = None
             if self.windowController():
-                font = sender.object()
-                selected_layers = get_selected_layers_from_font(font)
-                if not self.hasAddedCustomColumns:
-                    customize_table_view_in_font(font)
-                    self.hasAddedCustomColumns = True
+                if isinstance(sender.object(), (objc.lookUpClass('GSEditViewController'), objc.lookUpClass('GSFontViewController'))):
+                    selected_layers = VGPPLayer.layersFromArray_(sender.object().selectedLayers or [])
+                else:
+                    font = sender.object()
+                    selected_layers = get_selected_layers_from_font(font)
+                    if not self.hasAddedCustomColumns:
+                        customize_table_view_in_font(font)
+                        self.hasAddedCustomColumns = True
             if selected_layers and len(selected_layers) > 0:
                 # Update the binding only when the selection is changed to prevent the possible perfomance degradation.
                 if self.selectedLayers != selected_layers:
                     # Since the text field value are binded with - [NSArrayController selection] in XIB, make sure to select all the items available.
-                    selected_glyphs = get_glyphs_from_layers(selected_layers, font)
+                    selected_glyphs = get_glyphs_from_layers(selected_layers)
                     self.selectedLayers = selected_layers
                     self.selectedGlyphs = selected_glyphs
                     self.selectedLayersArrayController.addSelectedObjects_(self.selectedLayersArrayController.arrangedObjects())
