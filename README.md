@@ -26,4 +26,4 @@ Tested with Glyphs 2.6.2 and Glyphs 3.1.1 on macOS 10.15.
 
 ## License
 
-TBD
+Apache License 2.0
